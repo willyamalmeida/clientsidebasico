@@ -1,0 +1,144 @@
+.painel {
+    height: 60%;
+}
+
+.painel nav {
+    background-color: #4261d0;;
+    border-radius: 0 0 10px 10px;
+    padding: 5px 10px 5px 10px;
+    box-shadow: 0px 3px 4px 1px #8c8a8a;
+    margin-bottom: 30px;
+}
+
+.painel nav a {
+    text-decoration: none;
+    color: #e4e4e4;
+    margin-right: 5px;
+}
+
+.painel nav a:hover {
+    cursor: pointer;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.painel .titulo-principal {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4261d0;;
+    font-family: Segoe UI;
+    border-bottom: 1px solid #cecccc;
+    border-width: 1px;
+    margin-bottom: 30px;
+}
+
+.painel .linha {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 5px;    
+}
+
+.painel .linha div {
+    margin-right: 10px;
+}
+
+.painel .linha .coluna {
+    width: 100%;
+}
+
+.painel .linha .coluna10 {
+    width: 10%;
+}
+
+.painel .linha .coluna20 {
+    width: 20%;
+}
+
+.painel .linha .coluna30 {
+    width: 30%;
+}
+
+.painel .linha .coluna40 {
+    width: 40%;
+}
+
+.painel .linha .coluna50 {
+    width: 50%;
+}
+
+.painel .linha .coluna60 {
+    width: 60%;
+}
+
+.painel .linha .coluna70 {
+    width: 70%;
+}
+
+.painel .linha .coluna80 {
+    width: 80%;
+}
+
+.painel .linha .coluna90 {
+    width: 90%;
+}
+
+.painel .linha .texto-alinhado-centro {
+    text-align: center;
+}
+
+.painel .linha .texto-alinhado-direita {
+    text-align: right;
+}
+
+.painel .linha .texto-alinhado-esquerda {
+    text-align: left;
+}
+
+.painel [name="grid"] {
+    border-collapse: collapse;
+    border: 1px solid #bbb5b5;
+    width: 100%;
+    height: 300px;
+}
+
+.painel [name="grid"] thead {
+    background-color: #101010;
+    color: #bbbbbb;
+    text-align: left;
+}
+
+.painel [name="grid"] thead > tr {
+    height: 30px;
+}
+
+.painel [name="grid"] thead th {
+    padding-left: 5px;
+}
+
+.painel [name="grid"] tbody {
+    background-color: #e8ebec;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.painel [name="grid"] tbody .item {
+    height: 20px;
+}
+
+.painel [name="grid"] tbody .item:hover {
+    cursor: pointer;
+    background-color: #b8bad0;
+}
+
+.painel [name="grid"] tbody td {
+    padding-left: 5px;
+}
+
+.painel [name="grid"] tfoot {
+    background-color: #ababab;
+}
+
+.painel [name="grid"] tfoot tr th {
+    text-align: center;    
+}
