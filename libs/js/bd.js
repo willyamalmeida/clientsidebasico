@@ -4,21 +4,17 @@ bd = function(chave) {
     }
 
     this.chave = chave;
-    this.inicialize();
 }
 
 bd.prototype = {
-    inicialize: function() {
-        if (!localStorage.getItem(this.chave)) {
+    obtenhaLista: function() {
+        var listaBd = localStorage.getItem(this.chave);
+
+        if (!listaBd) {            
             this._atualizeLocalStorage([]);
         }
 
-        this.lista = this.obtenhaLista();
-    },
-
-    obtenhaLista: function() {
-        var listaBd = localStorage.getItem(this.chave);
-        var lista = JSON.parse(listaBd);
+        var lista = listaBd ? JSON.parse(listaBd) : [];
 
         return lista;        
     },
