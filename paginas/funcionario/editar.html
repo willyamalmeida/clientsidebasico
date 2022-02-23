@@ -1,51 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>    
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>client-side - funcionario - editar</title>
-    <link rel="stylesheet" href="../../libs/css/site.css" >
-    <link rel="stylesheet" href="../../libs/css/painel.css" >
-</head>
+    <meta charset="UTF-8" >
+    <title>client-side - funcionario - editar</title> 
+    <link rel="stylesheet" href="../../libs/css/site.css">
+    <link rel="stylesheet" href="../../libs/css/painel.css">
+    <script src="../../libs/js/jquery-1.7.2.min.js"></script>
+    <script src="../../libs/js/bd.js"></script>
+    <script src="../../libs/js/app.js"></script>
+</head>    
 <body>
     <div class="container">
         <header>
             <a href="../../index.html" name="home">Treinamento</a>
         </header>
         <section class="painel paginas-funcionario-editar">
+            
+            <!-- Barra de botoes -->
             <nav>
                 <a name="salvar">Salvar</a>
                 <a name="excluir">Excluir</a>
                 <a name="cancelar">Cancelar e voltar</a>
             </nav>
 
+            <!-- Titulo -->
             <div class="titulo-principal">Funcionários</div>
 
+            <!-- ID -->
             <div class="linha">
                 <div class="coluna40 texto-alinhado-direita">
                     <label>Id</label>
                 </div>
                 <div class="coluna">
-                    <input type="text" name="id">
+                    <input type="text" name="id" >
                 </div>
             </div>
 
+            <!-- Nome -->
             <div class="linha">
                 <div class="coluna40 texto-alinhado-direita">
                     <label>Nome</label>
                 </div>
                 <div class="coluna">
-                    <input type="text" name="nome" class="width300">
+                    <input type="text" name="nome" class="tamanho300">
                 </div>
             </div>
 
+            <!-- Departamento -->
             <div class="linha">
                 <div class="coluna40 texto-alinhado-direita">
                     <label>Departamento</label>
                 </div>
-                <div class="coluna">
-                    <select name="departamento" class="width300"></select>
+                <div class="coluna">                    
+                    <select name="departamento" class="tamanho300"></select>
                 </div>
             </div>
 
@@ -55,10 +62,12 @@
         </footer>
     </div>
 
-    <script src="../../libs/js/app.paginas.funcionario.editar.js"></script>
-    <script src="../../libs/js/bd.js"></script>
-    <script>
-        new app.paginas.funcionario.editar(document.querySelector(".paginas-funcionario-editar"));
+    <script>    
+        app.carregueJavascript("../../libs/js/app.paginas.funcionario.editar.js", {
+            callback: function() {
+                new app.paginas.funcionario.editar($(".paginas-funcionario-editar"));
+            }
+        });  
     </script>
 </body>
 </html>

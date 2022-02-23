@@ -1,134 +1,138 @@
-app = { paginas: { funcionario: {} } };
+definaNamespace("app.paginas.funcionario.editar", this);
+
 app.paginas.funcionario.editar = function($el) {
     if (!$el) {
-        throw("Element não definido");
+        throw ("Elemento não definido.")
     }
 
     this.$el = $el;
     this.db = new bd("listaDeFuncionarios");
     this.dbDepartamento = new bd("listaDeDepartamentos");
+    
+    this.$el.data('paginas-funcionario-editar', this);
 
     this.inicialize();
 };
 
-app.paginas.funcionario.editar.prototype = {
+app.paginas.funcionario.editar.prototype = {    
     inicialize: function() {
-        this.$elSalvar = this.$el.parentElement.querySelector("[name='salvar']");
-        this.$elExcluir = this.$el.parentElement.querySelector("[name='excluir']");
-        this.$elCancelar = this.$el.parentElement.querySelector("[name='cancelar']");
+        // mapear os campos
+        this.$elSalvar = this.$el.find("[name='salvar']");
+        this.$elExcluir = this.$el.find("[name='excluir']");       
+        this.$elCancelar = this.$el.find("[name='cancelar']");
 
-        this.$elId = this.$el.parentElement.querySelector("[name='id']");
-        this.$elNome = this.$el.parentElement.querySelector("[name='nome']");
-        this.$elDepartamento = this.$el.parentElement.querySelector("[name='departamento']");
+        this.$elId = this.$el.find("[name='id']");
+        this.$elNome = this.$el.find("[name='nome']");
+        this.$elDepartamento = this.$el.find("[name='departamento']");
+        
+        this.ehFluxoDeCadastro = true;
 
-        this.preencheListaDeDepartamentos();
+        // preparar componentes
+        this.prepareComponentes();
 
-        if(location.search){
-            this.preencheDados();
-        }
-
+        // ligar os eventos
         this.ligaEventos();
     },
 
-    preencheListaDeDepartamentos: function() {
-        var listaDeDepartamentos = this.dbDepartamento.obtenhaLista();
-        var options = listaDeDepartamentos.reduce(function(opts, departamento){
-            opts = opts
-              .concat("<option value='")
-              .concat(departamento.id)
-              .concat("'>")
-              .concat(departamento.descricao)
-              .concat("</option>");
-            return opts;
-        }, "");
-
-        this.$elDepartamento.innerHTML = "<option value='0'></option>".concat(options);
-    },
-
-    preencheDados: function() {
-        var props = window.location.search.replace("?", "").split("&");
-        var data = props.reduce(function(acc, x) {
-            var y = x.split("=");
-            acc[y[0]] = y[1];
-            return acc; }, {});
-
-        this.$elId.value = data.id;
-
-        var ehNovoItem = Number(data.id) === 0;
-
-        if(!ehNovoItem) {
-            var item = this.db.obtenhaItemPorId(data.id);
-            this.$elNome.value = item.nome;
-
-            var elOption = this.$elDepartamento.parentElement.querySelector("option[value='" + item.departamento.id + "']");
-
-            if(elOption){
-                elOption.selected = true;
-            }
-        }
-
-        this.$elId.disabled = true;
-        this.$elId.readOnly = true;
-        this.$elNome.focus();
-        this.$elExcluir.hidden = ehNovoItem;
-    },
-
-    valide: function(funcionario) {
-        if (!funcionario.nome) {
-            var msg = "O campo Nome é obrigatório";
-            alert(msg);
-            throw(msg);
-        }
-
-        if (!funcionario.departamento) {
-            var msg = "O campo Departamento é obrigatório";
-            alert(msg);
-            throw(msg);
-        }
-    },
-
-    salvar: function() {
-        var funcionario = {
-            id: Number(this.$elId.value),
-            nome: this.$elNome.value,
-            departamento: {}
-        };
-
-        var idDepartamento = this.$elDepartamento.selectedOptions[0].value;
-        var departamento = this.dbDepartamento.obtenhaItemPorId(idDepartamento);
-        funcionario.departamento = departamento;
-
-        this.valide(funcionario);
-
-        this.db.salvar(funcionario, function(item) {
-            item.nome = funcionario.nome;
-            item.departamento = funcionario.departamento;
-        });
-    },
-
-    excluir: function() {
-        this.db.removeItem(Number(this.$elId.value));
-    },
-
-    voltarParaTelaInicial: function() {
-        window.location = "index.html";
+    prepareComponentes: function() {
+        this.preencheListaDeDepartamentos();
+        this.preencheDadosDaTela();
+        this.habiliteCampos();
     },
 
     ligaEventos: function() {
         var _this = this;
 
-        this.$elSalvar.addEventListener("click", function() {
+        this.$elSalvar.on('click', function () {
             _this.salvar();
             _this.voltarParaTelaInicial();
         });
-
-        this.$elExcluir.addEventListener("click", function() {
+                
+        this.$elCancelar.on('click', function () {
+            _this.voltarParaTelaInicial();
+        });
+        
+        
+        this.$elExcluir.on('click', function () {
             _this.excluir();
             _this.voltarParaTelaInicial();
         });
+    },
 
-        this.$elCancelar.addEventListener("click", function() {
-            _this.voltarParaTelaInicial();
+    preencheListaDeDepartamentos: function() {
+        var lista = this.dbDepartamento.obtenhaLista();
+        
+        lista = lista.sort(d => d.id);
+
+        var options = lista.reduce(function(opts, departamento) {
+            opts = opts
+                .concat("<option value='").concat(departamento.id).concat("'>")
+                .concat(departamento.id + " - " + departamento.descricao)
+                .concat("</option>");
+            
+                return opts;                   
+        }, "");
+
+        this.$elDepartamento.html("<option value='0'></option>" + options);        
+    },
+
+    preencheDadosDaTela: function() {
+        var id = window.location.search.replace("?","").split("=")[1];
+
+        if (id) {               
+            var funcionario = this.db.obtenhaItemPorId(id);
+            
+            this.$elId.val(funcionario.id);
+            this.$elNome.val(funcionario.nome);
+
+            var elSelecionado = this.$elDepartamento.find('option[value="'+ funcionario.departamento.id + '"]');
+            
+            if (elSelecionado) {
+                elSelecionado.prop('selected', true);
+            }
+            
+            this.ehFluxoDeCadastro = false;
+        }
+    },
+
+    habiliteCampos: function() {
+        if (this.ehFluxoDeCadastro) {
+            this.$elExcluir.hide();
+        }
+
+        this.$elId.prop('disabled', true);
+        this.$elId.prop('readOnly', true);
+        this.$elNome.focus();
+    },
+
+    salvar: function() {
+        var funcionario = { 
+            id: Number(this.$elId.val()),
+            nome: this.$elNome.val(),
+            departamento: {}
+        };
+
+        if (!funcionario.nome) {
+            var mensagem = "O campo Nome é obrigatório.";
+            alert(mensagem);
+            throw(mensagem);
+        }
+
+        var idDepartamento = Number(this.$elDepartamento.val());
+        funcionario.departamento = this.dbDepartamento.obtenhaItemPorId(idDepartamento);
+        
+        this.db.salvar(funcionario, function(funcionarioParaAtualizar) {
+            funcionarioParaAtualizar.nome =  funcionario.nome;
+            funcionarioParaAtualizar.departamento = funcionario.departamento;
         });
+    },
+
+    excluir: function() {
+        var id = Number(this.$elId.val())
+        this.db.exclue(id);
+    },
+    
+    voltarParaTelaInicial: function() {
+        window.location = "index.html";
     }
-}
+};

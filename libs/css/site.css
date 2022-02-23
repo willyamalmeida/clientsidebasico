@@ -1,16 +1,21 @@
 * {
-    margin: 0;
-    padding: 0;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif 
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 html, body {
     height: 100%;
 }
 
+.container {
+    margin: 0 200px 0 200px;
+    height: 100%;
+}
+
 header {
     background-color: #101010;
-    font-weight: bold;
+    font-weight: bold;    
     padding: 15px 200px 15px 200px;
     margin: 0 -200px 0 -200px;
 }
@@ -23,14 +28,9 @@ header > a {
 }
 
 header > a:hover {
-    color: #ffffff;
+    color: #ffffff;   
 }
 
-.container {
-    margin: 0 200px 0 200px;
-    height: 100%;
-}
-    
 footer {
     position: absolute;
     bottom: 0;
@@ -43,23 +43,23 @@ footer {
 input, select {
     padding: .375rem .75rem;
     color: #495057;
-    background-color: #fff;
+    background-color: #ffffff;
     border: 1px solid #ced4da;
     border-radius: .25rem;
 }
 
-input.width300 {
+input.tamanho300 {
     width: 300px;
 }
 
-select.width300 {
-    width: 326px;
+select.tamanho300 {
+    width: 325px;
 }
 
 button {
     border: 1px solid transparent;
-    padding: .375rem .75rem;
-    border-radius: .25rem;    
+    padding: .375rem .375rem;
+    border-radius: .25rem;
 }
 
 button:hover {

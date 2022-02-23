@@ -1,101 +1,77 @@
-bd = function (chave) {
-    if (!chave) {
-        throw ("A chave não foi informado.");
+bd = function(chave) {
+    if(!chave) {
+        throw ("A chave não foi informado.")
     }
 
     this.chave = chave;
     this.inicialize();
-};
+}
 
 bd.prototype = {
-    inicialize: function () {
+    inicialize: function() {
         if (!localStorage.getItem(this.chave)) {
-            this.atualizeLocalStorage([]);
+            this._atualizeLocalStorage([]);
         }
 
         this.lista = this.obtenhaLista();
     },
 
-
-    valideItemCadastrado: function(id) {
-        var item = this.obtenhaItemPorId(id);
-
-        if(!item) {
-            throw("O item com id " + id + " não existe.");
-        }
-    },
-
-    salvar: function (item, callbackParaUpdate) {
-        if(!item) {
-            throw("O item não pode ser nulo.");
-        }
-
-        var ehNovoItem = item.id === 0;
-        var lista = this.obtenhaLista();
-
-        if (ehNovoItem) {
-            item.id = this.obtenhaProximoId(lista);
-            lista.push(item);
-        }
-        else {
-            var itemAtualizado = this.obtenhaItem(lista, item.id);
-            callbackParaUpdate(itemAtualizado);
-        }
-
-        this.atualizeLocalStorage(lista);
-    },
-
-    atualizeLocalStorage: function(lista) {
-        var novaLista = JSON.stringify(lista);
-        localStorage.setItem(this.chave, novaLista);
-    },
-
-    obtenhaLista: function () {
+    obtenhaLista: function() {
         var listaBd = localStorage.getItem(this.chave);
         var lista = JSON.parse(listaBd);
 
-        return lista;
+        return lista;        
     },
 
-    obtenhaItemPorId: function (id) {
+    obtenhaItemPorId: function(id) {
         var lista = this.obtenhaLista();
-        var item = this.obtenhaItem(lista, id);
+        var item = lista.find(x => x.id == Number(id));
+        
+        return item;
+    },
+
+    obtenhaItem: function(filtro) {
+        var lista = this.obtenhaLista();
+        var item = lista.find(filtro);
 
         return item;
     },
 
-    obtenhaItem: function(lista, id) {
-        var item = lista.find(function(x) { return x.id === Number(id); });
-        return item;
+    exclueLista: function() {
+        this._atualizeLocalStorage([]);
     },
 
-    obtenhaProximoId: function(lista) {
-        var listaDeIds = lista.reduce(function(ids, item) {
-            ids.push(item.id);
-            return ids;
-        }, [0]);
-
-        var maiorId = listaDeIds.reduce(function(a, b) {
-             return Math.max(a, b);
-        });
-
-        var proximoId = maiorId + 1;
-
-        return proximoId;
+    exclue: function(id) {        
+        var lista = this.obtenhaLista();          
+        var novaLista = lista.filter(x => x.id != id);
+    
+        this._atualizeLocalStorage(novaLista);
     },
 
-    exclueTodos: function () {
-        localStorage.removeItem(this.chave);
-    },
+    salvar: function(item, callbackParaAtualizar) {
+        if (!item) {
+            throw("O item não pode ser nulo.")
+        }
 
-    removeItem: function (id) {
-        this.valideItemCadastrado(id);
-
+        var ehNovoItem = Number(item.id) === 0;
         var lista = this.obtenhaLista();
-        var item = this.obtenhaItemPorId(id);
+        
+        if (ehNovoItem) {            
+            var maiorId = lista && lista.length > 0 ? Math.max(...lista.map(x => x.id)) : 0;
+            item.id = maiorId + 1;
 
-        lista.pop(item);
+            lista.push(item);            
+        } else {
+            var id = Number(item.id);
+            var itemJaCadastrado = lista.find(x => x.id == id);
+            callbackParaAtualizar(itemJaCadastrado);
+        }
+        
+        this._atualizeLocalStorage(lista);
+    },
 
-        this.atualizeLocalStorage(lista);
+    _atualizeLocalStorage: function(lista) {
+        var novaLista = JSON.stringify(lista);
+        localStorage.setItem(this.chave, novaLista);
     }
-};
+}

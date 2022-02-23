@@ -1,49 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>    
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>client-side - departamento</title>
-    <link rel="stylesheet" href="../../libs/css/site.css" >
-    <link rel="stylesheet" href="../../libs/css/painel.css" >
-</head>
-<body>
+    <meta charset="UTF-8" >
+    <title>client-side - departamento</title> 
+    <link rel="stylesheet" href="../../libs/css/site.css">
+    <link rel="stylesheet" href="../../libs/css/painel.css">   
+    <script src="../../libs/js/bd.js"></script>
+    <script src="../../libs/js/jquery-1.7.2.min.js"></script>
+</head>    
+<body>    
     <div class="container">
         <header>
             <a href="../../index.html" name="home">Treinamento</a>
         </header>
         <section class="painel paginas-departamento-index">
+           
             <nav>
-                <a href="editar.html?id=0">Novo</a>
+                <a href="editar.html">Novo</a>
             </nav>
 
-            <div class="titulo-principal">Departamentos</div>
+            <div class="titulo-principal">
+                Departamentos
+            </div>
 
             <div class="linha">
                 <div class="coluna">
-                    <input type="text" name="filtro">
-                    &nbsp;
+                    <input type="text" name="filtro"> 
                     <button name="pesquisar">Pesquisar</button>
                 </div>
             </div>
 
             <div class="linha">
-                <table name="grid">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Descricao</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="2">Total:&nbsp;<span>0</span></th>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="coluna">
+
+                    <table name="grid">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>                                                 
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">
+                                    Total:&nbsp;<span>0</span>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
             </div>
 
         </section>
@@ -52,10 +64,10 @@
         </footer>
     </div>
 
-    <script src="../../libs/js/app.paginas.departamento.index.js"></script>
-    <script src="../../libs/js/bd.js"></script>
-    <script>
+    <script src="../../libs/js/app.paginas.departamento.index.js" ></script>    
+    <script>        
         new app.paginas.departamento.index(document.querySelector(".paginas-departamento-index"));
     </script>
+
 </body>
 </html>

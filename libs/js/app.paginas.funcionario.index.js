@@ -1,45 +1,80 @@
-app = { paginas: { funcionario: {} } };
+definaNamespace("app.paginas.funcionario.index", this);
+
 app.paginas.funcionario.index = function($el) {
     if (!$el) {
-        throw("Element não definido");
+        throw ("Elemento não definido.")
     }
 
     this.$el = $el;
     this.db = new bd("listaDeFuncionarios");
+    
+    $(this.$el).data('paginas-funcionario-index', this);
 
     this.inicialize();
 };
 
-app.paginas.funcionario.index.prototype = {
+app.paginas.funcionario.index.prototype = {    
     inicialize: function() {
-        this.$elGrid = this.$el.parentElement.querySelector("[name='grid']");
-        this.$elTotal = this.$elGrid.parentElement.querySelector("tfoot > tr > th > span");
+        // mapear os campos
+        this.$elFiltro = this.$el.find("[name='filtro']");
+        this.$elPesquisar = this.$el.find("[name='pesquisar']");
 
-        this.carregueGrid();
+        this.$elGrid = this.$el.find('[name="grid"]');
+        this.$elTbody = this.$el.find('[name="grid"] tbody');
+        this.$elTotal = this.$el.find('[name="grid"] tfoot span'); 
+
+        // preparar componentes
+        this.prepareComponentes();
+
+        // ligar os eventos
         this.ligaEventos();
     },
 
-    carregueGrid: function() {
-        var elTbody = this.$elGrid.parentElement.querySelector("tbody");
+    prepareComponentes: function() {
         var lista = this.db.obtenhaLista();
-        var tbody = lista.reduce(function(linha, funcionario) {
-            linha = linha.concat("<tr class='item'><td>"
-                .concat(funcionario.id).concat("</td><td>")
-                .concat(funcionario.nome).concat("</td><td>")
-                .concat(funcionario.departamento.descricao).concat("</td></tr>"));
-            return linha;
-        }, "");
-
-        elTbody.innerHTML = tbody.concat("<tr><td></td><td></td><td></td></tr>");
-        this.$elTotal.innerText = lista.length;
+        this.preencheGrid(lista);
     },
 
     ligaEventos: function() {
-        this.$elGrid.querySelectorAll("tbody .item").forEach(function(row) {
-            row.addEventListener("click", function(e) {
-                var id = e.target.parentElement.querySelector("td").innerText;
-                location = "editar.html?id=".concat(id);
-            });
+        var _this = this;
+        
+        this.$elGrid.on('click', 'tbody .item', function(e) {
+            var id = e.target.parentElement.querySelector("td").innerText;
+            location = "editar.html?id=" + id;
         });
+        
+        this.$elFiltro.on("keyup", function() {    
+            _this.pesquisar();
+        });
+
+        this.$elPesquisar.on("click", function(){
+            _this.pesquisar(); 
+        });
+    },
+
+    preencheGrid: function(lista) {        
+        lista = lista.sort(x => x.id);
+
+        var strTbody = lista.reduce(function(linha, funcionario){
+            linha = linha
+            .concat("<tr class='item'>")
+            .concat("<td>").concat(funcionario.id).concat("</td>")
+            .concat("<td>").concat(funcionario.nome).concat("</td>")
+            .concat("<td>").concat(funcionario.departamento.id + " - " + funcionario.departamento.descricao).concat("</td>")
+            .concat("</tr>")
+            
+            return linha;
+        }, "");
+        
+        this.$elTbody.html(strTbody.concat("<tr><td></td><td></td><td></td></tr>"));
+        this.$elTotal.text(lista.length);    
+    },
+
+    pesquisar: function() {
+        var filtro = this.$elFiltro.val().toUpperCase();
+        var listaDeFuncionarios = this.db.obtenhaLista();
+        var lista = listaDeFuncionarios.filter(x => x.nome.toLocaleUpperCase().startsWith(filtro) || x.id.toString().toLocaleUpperCase().startsWith(filtro));
+        
+        this.preencheGrid(lista);
     }
-}
+};
